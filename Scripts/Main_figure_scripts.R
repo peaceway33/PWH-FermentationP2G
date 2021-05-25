@@ -83,29 +83,32 @@ Figure_2A <-
   ylab("# of QTN")
 
 #### Figure 2B ####
-variant_compare_all <- #Supplementary data Figure 2B#
+variant_compare_study <- #Supplementary data Figure 2B#
 
-Figure_2B <- variant_compare_all %>%
+p2 <- variant_compare_study %>%
   filter(!Class %in% c("Other")) %>%
-  group_by(Group, Class) %>%
+  group_by(Study, Class) %>%
   summarise(n = n()) %>%
   mutate(freq = n / sum(n)) %>%
-  ggplot(aes(x= Class, y= freq, fill= fct_rev(Group))) +
-  geom_col(color= "black", width=0.6, alpha=0.8, position = position_dodge(width=0.75))+
+  ggplot(aes(x= Study, y= freq, fill= Class)) +
+  geom_col(color= "white", width=0.6, alpha=0.8)+
   theme_cowplot()+
   theme(
-    legend.position = c(0.05,0.9),
+    legend.position = "top",
     legend.title=element_blank(),
     axis.line =  element_line(size = 0.1),
     axis.ticks = element_line(size = 0.5),
     axis.title.x = element_blank(),
-    axis.text.x = element_text(angle=45,hjust = 1, vjust=1),
     axis.title= element_text(face="bold"),
     panel.border = element_rect(colour = "black", size=0.5),
-    strip.background = element_blank())+
-  scale_fill_manual(values = c("grey90", "grey45", "black"))+
-  ylab("Fraction of QTN")+
-  guides(fill = guide_legend(reverse=TRUE))
+    strip.background = element_blank(),
+    axis.text = element_text(size=9))+
+  scale_fill_brewer(direction= -1, palette = "Set2")+
+  scale_x_discrete(labels= c("Drug & \n other stressors \n (She & Jarosz, 2018)", 
+                             "Metabolic \n traits \n (Jakobson et al., 2019)", 
+                             "Fermentation & \n other stressors \n (Current study)",
+                             "All variants \n between parents"))+
+  ylab("Fration of QTN")
 
 #### Figure 2C ####
 variant_freq <- #Supplementary data Figure 2C#

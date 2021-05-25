@@ -34,14 +34,47 @@ Figure_S1 <- ggpairs(phenotypes_combined_subset,
   theme_custom
 Figure_S1 <- scale_manual(Figure_S1)
 #### Figure S2 ####
-SUC2_swap <- #Supplementary data Figure S2#
+variant_compare_all <- #Supplementary data Figure S2#
+  
+Figure_2B <- variant_compare_all %>%
+  filter(!Class %in% c("Other")) %>%
+  group_by(Group, Class) %>%
+  summarise(n = n()) %>%
+  mutate(freq = n / sum(n)) %>%
+  ggplot(aes(x= Class, y= freq, fill= fct_rev(Group))) +
+  geom_col(color= "black", width=0.6, alpha=0.8, position = position_dodge(width=0.75))+
+  theme_cowplot()+
+  theme(
+    legend.position = c(0.05,0.9),
+    legend.title=element_blank(),
+    axis.line =  element_line(size = 0.1),
+    axis.ticks = element_line(size = 0.5),
+    axis.title.x = element_blank(),
+    axis.text.x = element_text(angle=45,hjust = 1, vjust=1),
+    axis.title= element_text(face="bold"),
+    panel.border = element_rect(colour = "black", size=0.5),
+    strip.background = element_blank())+
+  scale_fill_manual(values = c("grey90", "grey45", "black"))+
+  ylab("Fraction of QTN")+
+  guides(fill = guide_legend(reverse=TRUE))  
+variant_compare_study$Study <- factor(variant_compare_study$Study, levels=c("She", "Chris", "Ping"))
+variant_compare_study$Class <- factor(variant_compare_study$Class, levels=c(
+  "Other",
+  "Frameshift",
+  "Synonymous",
+  "Missense",
+  "Intergenic"
+))
+
+#### Figure S3 ####
+SUC2_swap <- #Supplementary data Figure S3#
 
 my_sucorse_comparisons <- list(c("suc2", "SNV5462"),
                                c("suc2", "WT"),
                                c("SNV5462","WT"))
 
 
-Figure_S2 <- ggplot(SUC2_swap, aes(sample,value))+
+Figure_S3 <- ggplot(SUC2_swap, aes(sample,value))+
   facet_grid(~class, scales = "free_x", space = "free_x") +
   stat_summary(fun.y=mean, geom="bar",aes(fill=sample),
                width = 0.8,
@@ -71,8 +104,8 @@ Figure_S2 <- ggplot(SUC2_swap, aes(sample,value))+
   ggtitle("Sucrose (g/l)")+
   coord_cartesian(ylim=c(0, 5))+
   xlab("")
-#### Figure S3 ####
-SNV_SWAP <- #Supplementary data Figure S3#
+#### Figure S4 ####
+SNV_SWAP <- #Supplementary data Figure S4#
 
 
 trait_to_change_SUC2 <- c("glycerol conc.", 
@@ -120,7 +153,7 @@ stat.test_ALD6 <- stat.test_ALD6 %>% add_xy_position(fun = "mean", x = "backgrou
 stat.test_ALD6
 
 
-# Figure_S3A 
+# Figure_S4A 
 
 Figure_S3A <- ggplot(trait_dotplot_all_SUC2, aes(background,value_norm))+
   facet_grid(trait~class, scales="free_x", switch = "y", labeller = label_wrap_gen(width=10))+
@@ -156,7 +189,7 @@ Figure_S3A <- ggplot(trait_dotplot_all_SUC2, aes(background,value_norm))+
   coord_flip()
 
 
-# Figure_S3B 
+# Figure_S4B 
 
 Figure_S3B <- ggplot(trait_dotplot_all_ALD6, aes(background,value_norm))+
   facet_grid(trait~class, scales="free_x", switch = "y", labeller = label_wrap_gen(width=10))+
@@ -191,8 +224,8 @@ Figure_S3B <- ggplot(trait_dotplot_all_ALD6, aes(background,value_norm))+
   ) +
   coord_flip()
 
-#### Figure S4 ####
-SNV_SWAP_sup <- #Supplementary data Figure S4#
+#### Figure S5 ####
+SNV_SWAP_sup <- #Supplementary data Figure S5#
 
 
 trait_dotplot_ima1 <- SNV_SWAP_sup %>% 
@@ -213,7 +246,7 @@ stat.test_ima1 <- trait_dotplot_ima1 %>%
 
 stat.test_ima1 <- stat.test_ima1 %>% add_xy_position(fun = "mean", x = "background")
 
-Figure_S4 <- ggplot(trait_dotplot_ima1, aes(sample,value_norm))+
+Figure_S5 <- ggplot(trait_dotplot_ima1, aes(sample,value_norm))+
   facet_grid(trait~class, scales="free_x", switch = "y", labeller = label_wrap_gen(width=15))+
   geom_hline(yintercept = 1, color="grey", size=0.5, linetype="dashed")+
   stat_summary(fun.data=mean_sdl, geom="errorbar", aes(color=sample), width=0, lwd=0.5, position=position_dodge(.7))+
@@ -239,10 +272,10 @@ Figure_S4 <- ggplot(trait_dotplot_ima1, aes(sample,value_norm))+
     stat.test_ima1, label = "p.adj.signif", tip.length = 0,
     coord.flip = TRUE, y.position=c(1.2, 1.25))+
   coord_flip()
-#### Figure S5 ####
+#### Figure S6 ####
 # read data
-cov_file = #Supplementary data Figure S5A#
-MALgenes = #Supplementary data Figure S5B#
+cov_file = #Supplementary data Figure S6A#
+MALgenes = #Supplementary data Figure S6B#
 
 cov_file$V1 = factor(cov_file$V1,
                      levels = c("SRR5634755", "SRR5634774", "SRR5630056", "SRR5634576", "SRR5630345", "SRR5634504", "SRR5630053", "SRR5630190", "SRR5630087", "SRR5634745", "SRR5629932", "SRR5634542", "SRR5630013", "SRR5634491", "SRR5634513", "SRR5634546", "SRR5634530", "SRR5630171", "SRR5634612", "SRR5630175", "SRR5634823", "SRR5630349", "SRR5634650", "SRR5634752", "SRR5629824", "SRR5634416", "SRR5634482", "SRR5629863", "SRR5629972", "SRR5634730", "SRR5630447", "SRR5634498", "SRR5630208", "SRR5634441", "SRR5630164", "SRR5634349", "SRR5634368", "SRR5634725", "SRR5634767", "SRR5629868", "SRR5634391", "SRR5634638",
@@ -321,16 +354,16 @@ p2 = ggplot(cov_file) +
                                 frame.colour = "black",
                                 frame.linewidth = 1))
 
-# Figure_S5A
-Figure_S5A <- grid.arrange(p1, p2, nrow = 1,
+# Figure_S6A
+Figure_S6A <- grid.arrange(p1, p2, nrow = 1,
              layout_matrix = rbind(c(1, 2)),
              widths = c(0.12, 0.90))
 
-# Figure_S5B
+# Figure_S6B
 MALgenes$IMA1_ALLELE = factor(MALgenes$IMA1_ALLELE, levels=c("R", "Y"))
 mu = ddply(MALgenes, "IMA1_ALLELE", summarise,
            grp.mean=mean(Maltose_growth))
-Figure_S5B <- 
+Figure_S6B <- 
 ggplot(MALgenes, aes(x = Maltose_growth, fill = IMA1_ALLELE, color =
                        IMA1_ALLELE)) +
   geom_histogram(bins = 20, position = "identity", alpha = 0.5) +
@@ -359,8 +392,8 @@ ggplot(MALgenes, aes(x = Maltose_growth, fill = IMA1_ALLELE, color =
 
 
 
-#### Figure S6 ####
-SNV_SWAP_sup <- #Supplementary data Figure S6B#
+#### Figure S7 ####
+SNV_SWAP_sup <- #Supplementary data Figure S7B#
 
 trait_dotplot_urk1 <- 
   SNV_SWAP_sup %>% 
@@ -379,9 +412,9 @@ stat.test_urk1 <- trait_dotplot_urk1 %>%
 
 stat.test_urk1 <- stat.test_urk1 %>% add_xy_position(fun = "mean", x = "background")
 
-#Figure_S6B
+#Figure_S7B
 
-Figure_S6B <- ggplot(trait_dotplot_urk1, aes(sample,value_norm))+
+Figure_S7B <- ggplot(trait_dotplot_urk1, aes(sample,value_norm))+
   facet_grid(trait~class, scales="free_x", switch = "y")+
   geom_hline(yintercept = 1, color="grey", size=0.5, linetype="dashed")+
   stat_summary(fun.data=mean_sdl, geom="errorbar", aes(color=background), width=0, lwd=0.5, position=position_dodge(.7))+
@@ -409,7 +442,7 @@ Figure_S6B <- ggplot(trait_dotplot_urk1, aes(sample,value_norm))+
                             "WT" = " "
   ))
 
-urk1_del <- #Supplementary data Figure S6C#
+urk1_del <- #Supplementary data Figure S7C#
 
 urk1_del$class <- factor(urk1_del$class, levels = c("S.boulardii", "Ethanol Red", "CEN.PK"))
 
